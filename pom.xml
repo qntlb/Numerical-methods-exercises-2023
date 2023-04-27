@@ -12,4 +12,230 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<src.main.java.dir>src/main/java</src.main.java.dir>
+		<src.test.java.dir>src/test/java</src.test.java.dir>
+		<!-- dependencies -->
+		<commons-math.version>3.6.1</commons-math.version>
+		<commons-lang.version>3.10</commons-lang.version>
+		<junit.version>5.6.2</junit.version>
+		<!-- maven plugins -->
+		<maven.compiler-plugin.version>3.8.1</maven.compiler-plugin.version>
+		<maven.surefire-plugin.version>3.0.0-M5</maven.surefire-plugin.version>
+		<maven.surefire-report-plugin.version>3.0.0-M5</maven.surefire-report-plugin.version>
+		<maven.javadoc-plugin.version>3.3.2</maven.javadoc-plugin.version>
+		<maven.jar-plugin.version>3.2.0</maven.jar-plugin.version>
+		<maven.source-plugin.version>3.2.1</maven.source-plugin.version>
+		<maven.site-plugin.version>3.9.1</maven.site-plugin.version>
+		<checkstyle-plugin.version>3.1.1</checkstyle-plugin.version>
+		<clover-plugin.version>4.4.1</clover-plugin.version>
+		<maven-project-info-reports-plugin.version>3.1.0</maven-project-info-reports-plugin.version>
+		<maven-scm-publish-plugin.version>3.1.0</maven-scm-publish-plugin.version>
+		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+		<maven-bnd-plugin.version>5.3.0</maven-bnd-plugin.version>
+	</properties>
+	
+	
+	 <build>
+	 	<defaultGoal>clean install javadoc:javadoc</defaultGoal>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<sourceDirectory>${src.main.java.dir}</sourceDirectory>
+		<testSourceDirectory>${src.test.java.dir}</testSourceDirectory>
+	 
+        <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler-plugin.version}</version>
+				<configuration>
+					<fork>true</fork>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven.source-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.javadoc-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.surefire-plugin.version}</version>
+				<configuration>
+					<forkCount>1</forkCount>
+					<reuseForks>false</reuseForks>
+					<argLine>-mx6G</argLine>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${checkstyle-plugin.version}</version>
+				<configuration>
+					<configLocation>finmath-checkstyle.xml</configLocation>
+					<excludes>**/module-info.java</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>${maven-release-plugin.version}</version>
+				<configuration>
+					<releaseProfiles>java-11</releaseProfiles>
+				</configuration>
+				<executions>
+					<execution>
+						<id>java-11</id>
+						<configuration>
+							<releaseProfiles>java-11</releaseProfiles>
+						</configuration>
+					</execution>
+					<execution>
+						<id>java-8</id>
+						<configuration>
+							<releaseProfiles>java-8</releaseProfiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Publish the site to GitHub gh-pages: use mvn site site:deploy site-deploy -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>${maven.site-plugin.version}</version>
+				<configuration>
+					<skipDeploy>true</skipDeploy>
+				</configuration>
+				<executions>
+					<execution>
+						<id>stage-for-scm-publish</id>
+						<phase>post-site</phase>
+						<goals>
+							<goal>stage</goal>
+						</goals>
+						<configuration>
+							<skipDeploy>false</skipDeploy><!-- MSITE-652: configuration won't be necessary with m-site-p 3.2 -->
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>3.3.4</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.doxia</groupId>
+						<artifactId>doxia-module-markdown</artifactId>
+						<version>1.9</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>${maven-scm-publish-plugin.version}</version>
+				<configuration>
+					<scmBranch>gh-pages</scmBranch>
+				</configuration>
+				<executions>
+					<execution>
+						<id>scm-publish</id>
+						<phase>site-deploy</phase>
+						<goals>
+							<goal>publish-scm</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<!-- Allow local modifications. The build number is reliable only in releases obtained via Maven central. -->
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+				<version>${clover-plugin.version}</version>
+				<configuration>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>instrument</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>biz.aQute.bnd</groupId>
+				<artifactId>bnd-maven-plugin</artifactId>
+				<version>${maven-bnd-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>bnd-process</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven.jar-plugin.version}</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Automatic-Module-Name>net.finmath.lib</Automatic-Module-Name>
+						</manifestEntries>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>${main.class}</mainClass>
+						</manifest>
+						<!-- Use the manifest file generated by the bnd-maven-plugin -->
+						<!-- Note: Maven archiver will merge or custom file with the keys above -->
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+					<classifier>${envClassifier}</classifier>
+				</configuration>
+			</plugin>
+		</plugins>
+         
+    </build>
 </project>
+
