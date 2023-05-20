@@ -3,7 +3,6 @@ package com.andreamazzon.handout4;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
-import com.andreamazzon.handout4.MonteCarloEvaluationsWithExactResultInterface;
 
 /**
  * This class tests the Monte-Carlo computation of the integral of a function
