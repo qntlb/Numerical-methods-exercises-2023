@@ -27,15 +27,15 @@ public class MonteCarloIntegrationCheck {
 
 		// mean and variance of the realizations
 		double averageComputations = simulator.getAverageComputations();
-		double nextAverageComputations = simulator.getAverageComputations();
+		//double nextAverageComputations = simulator.getAverageComputations();
 
 		double standardDeviationComputation = simulator.getStandardDeviationComputations();
 
 		System.out.println("The mean of the approximations of the integral for  " + numberOfDrawings + " drawings is "
 				+ formatterDouble.format(averageComputations));
 
-		System.out.println("The next mean of the approximations of the integral for  " + numberOfDrawings
-				+ " drawings is " + formatterDouble.format(nextAverageComputations));
+		//System.out.println("The next mean of the approximations of the integral for  " + numberOfDrawings
+		//		+ " drawings is " + formatterDouble.format(nextAverageComputations));
 
 		System.out.println();
 
@@ -62,7 +62,7 @@ public class MonteCarloIntegrationCheck {
 
 		int[] bins = simulator.getHistogramComputations(leftPointHistogram, rightPointHistogram, binsNumber);
 
-		System.out.println("Vector for the histogram of the approximations of the integral: " + Arrays.toString(bins));
+		System.out.println("The vector for the histogram of the approximation of the integral from " + leftPointHistogram + " to " + rightPointHistogram + " is " + Arrays.toString(bins));
 		System.out.println("\n");
 
 		System.out.println("Mean of the errors for different number of drawings: ");
@@ -76,6 +76,7 @@ public class MonteCarloIntegrationCheck {
 					exponent, numberOfIntegrations, numberOfDrawings);
 
 			averageAbsoluteError = newSimulator.getAverageAbsoluteError();
+			
 			System.out.println("Mean of the errors in the approximation of the integral with " + numberOfDrawings
 					+ " drawings: " + formatterDouble.format(averageAbsoluteError));
 

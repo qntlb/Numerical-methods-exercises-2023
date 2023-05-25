@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author Andrea Mazzon
  *
  */
-public class MonteCarloPiCheck {
+public class MonteCarloPiFromHypersphereCheck {
 
 	private final static DecimalFormat formatterDouble = new DecimalFormat("0.00000");
 
@@ -17,9 +17,10 @@ public class MonteCarloPiCheck {
 
 		int numberOfIntegrations = 100;// number of Monte Carlo executions
 		int numberOfDrawings = 100000;
-
-		MonteCarloEvaluationsWithExactResultInterface simulator = new MonteCarloPi(numberOfIntegrations,
-				numberOfDrawings);
+		int dimension = 3;
+		
+		MonteCarloEvaluationsWithExactResultInterface simulator = new MonteCarloPiFromHypersphere(numberOfIntegrations,
+				numberOfDrawings, dimension);
 
 		// mean and variance of the realizations
 		double averageComputations = simulator.getAverageComputations();
@@ -65,9 +66,7 @@ public class MonteCarloPiCheck {
 
 		while (numberOfDrawings <= 1000000) {
 			MonteCarloPi newSimulator = new MonteCarloPi(numberOfIntegrations, numberOfDrawings);
-			
 			averageAbsoluteError = newSimulator.getAverageAbsoluteError();
-			
 			System.out.println("Mean of the errors in the computation of Pi with " + numberOfDrawings + " drawings: "
 					+ formatterDouble.format(averageAbsoluteError));
 
