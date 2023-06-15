@@ -57,6 +57,19 @@ public abstract class MeanConfidenceInterval {
 	 *         by the number of mean computations
 	 */
 	public double frequenceOfInterval(int numberOfMeanComputations, double confidenceLevel) {
-		return 0;
+		double numberOfTimesInsideTheInterval = 0;
+		// computed with CLT or Chebychev depending on the object calling
+		double lowerBound = getLowerBoundConfidenceInterval(confidenceLevel);
+		// computed with CLT or Chebychev depending on the object calling
+		double upperBound = getUpperBoundConfidenceInterval(confidenceLevel);
+
+		double sampleMean;
+		for (int i = 0; i < numberOfMeanComputations; i++) {
+			sampleMean = randomVariable.getSampleMean(sampleSize); // sample mean
+			if (sampleMean > lowerBound && sampleMean < upperBound) {
+				numberOfTimesInsideTheInterval++; // sample mean within the confidence interval
+			}
+		}
+		return numberOfTimesInsideTheInterval / numberOfMeanComputations;
 	}
 }
