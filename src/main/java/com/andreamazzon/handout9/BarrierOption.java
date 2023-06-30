@@ -67,10 +67,7 @@ public class BarrierOption extends AbstractAssetMonteCarloProduct {
 	public RandomVariable getValue(double evaluationTime, AssetModelMonteCarloSimulationModel model)
 			throws CalculationException {
 		
-		//omega_j -> 1_{B_L <= X_{t_i}(omega_j)<= B_U fort all i=1,...,n} (X_{t_i}(omega_j)-K)^+
-		//1_{B_L <= X_{t_i}(omega_j)<= B_U for all i=1,...,k+1} = 
-		//1_{B_L <= X_{t_{i}}(omega_j)<= B_U for all i=1,...,k}1_{B_L <= X_{t_{k+1}}(omega_j)<= B_U}
-
+		//omega_j -> 1_{B_L <= X_{t_i}(omega_j)<= B_U for all i=1,...,n} (X_{t_i}(omega_j)-K)^+
 		
 		//we need it to check the path before maturity
 		TimeDiscretization timeDiscretizationOfTheUnderlying = model.getTimeDiscretization();
@@ -82,6 +79,11 @@ public class BarrierOption extends AbstractAssetMonteCarloProduct {
 		 */
 		RandomVariable insideBarriersAtAllTimes = new RandomVariableFromDoubleArray(1.0);
 		
+		/*
+		 * 1_{B_L <= X_{t_i}(omega_j)<= B_U for all i=1,...,k+1} =
+		 * 1_{B_L <= X_{t_{i}}(omega_j)<= B_U for all i=1,...,k}1_{B_L <= X_{t_{k+1}}(omega_j)<= B_U}
+		 */
+				
 		//we check all times
 		for (double currentTime : discretizedTimes) {
 
